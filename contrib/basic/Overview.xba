@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Overview" script:language="StarBasic">REM  *****  BASIC  *****
+
+Sub Main
+  extension = GetDefaultContext().getValueByName(&quot;/singletons/org.digimead.documentumelasticus.Extension&quot;)
+  factory = extension.Factory
+  ui = factory.getUI
+  ui.reload
+End Sub
+
+Function RegStateBlock()
+	Dim opt(3)
+	opt(0) = &quot;hidemode 3, insets 0, gap 0&quot; &apos; MigLayout LC
+	opt(1) = &quot;[c, grow, fill]&quot; &apos; MigLayout AC
+	opt(2) = &quot;[c, grow, fill]&quot; &apos; MigLayout AC
+	opt(3) = &quot;height 300!, wrap&quot; &apos; container
+	RegStateBlock = opt
+End Function
+
+Function Unregistered()
+	Dim opt(20)
+    opt(0) = &quot;nocache, insets 0, gap 0&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c][c, grow, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, grow, fill]0[c]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;&quot; &apos; container constraint
+    REM left
+    opt(4) = &quot;insets 0, gap 0&quot; &apos; left MigLayout LC
+    opt(5) = &quot;&quot; &apos; left MigLayout AC
+    opt(6) = &quot;&quot; &apos; left MigLayout AC
+    opt(7) = &quot;&quot; &apos; left constraint
+    REM right
+    opt(8) = &quot;debug, hidemode 3, insets 0, gap 0&quot; &apos; right MigLayout LC
+    opt(9) = &quot;[grow, fill]&quot; &apos; right MigLayout AC
+    opt(10) = &quot;[grow, fill][min]&quot; &apos; right MigLayout AC
+    opt(11) = &quot;&quot; &apos; right constraint
+    REM commercial
+    opt(12) = &quot;debug, insets 0, gap 0&quot; &apos; commercial MigLayout LC
+    opt(13) = &quot;[grow, fill][grow, fill][grow, fill]&quot; &apos; commercial MigLayout AC
+    opt(14) = &quot;[grow, fill]&quot; &apos; commercial MigLayout AC
+    opt(15) = &quot;split&quot; &apos; commercial constraint
+    REM personal
+    opt(16) = &quot;debug, insets 0, gap 0&quot; &apos; personal MigLayout LC
+    opt(17) = &quot;[grow, fill][grow, fill][grow, fill]&quot; &apos; personal MigLayout AC
+    opt(18) = &quot;[grow, fill]&quot; &apos; personal MigLayout AC
+    opt(19) = &quot;wrap&quot; &apos; personal constraint
+    REM label
+    opt(20) = &quot;shrink, alignx center&quot; &apos; refund label constraint
+	Unregistered = opt
+End Function
+
+Function UnregisteredTab(prefix)
+	Dim opt(11)
+    opt(0) = &quot;debug, inset 0, gap 0, ltr&quot; &apos; container MigLayout LC
+    opt(1) = &quot;&quot; &apos; container MigLayout AC
+    opt(2) = &quot;&quot; &apos; container MigLayout AC
+    opt(3) = &quot;&quot; &apos; container constraint
+    opt(4) = prefix + &quot;tabBefore.png&quot; &apos; imgBefore
+    opt(5) = &quot;wrap&quot; &apos; imgBefore constraint
+    opt(6) = prefix + &quot;tabBegin.png&quot; &apos; imgBegin
+    opt(7) = &quot;wrap&quot; &apos; imgBegin constraint
+    opt(8) = prefix + &quot;tabEnd.png&quot; &apos; imgEnd
+    opt(9) = &quot;wrap&quot; &apos; imgEnd constraint
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; imgAfter
+    opt(11) = &quot;wrap&quot; &apos; imgAfter constraint
+	UnregisteredTab = opt
+End Function
+
+Function UnregisteredTabCommercial(prefix)
+	Dim opt(2)
+    opt(0) = prefix + &quot;tabCommercial.png&quot; &apos; passive
+    opt(1) = prefix + &quot;tabCommercialSelected.png&quot; &apos; active
+    opt(2) = &quot;wrap&quot; &apos; constraint
+	UnregisteredTabCommercial = opt
+End Function
+
+Function UnregisteredTabPersonal(prefix)
+	Dim opt(2)
+    opt(0) = prefix + &quot;tabPersonal.png&quot; &apos; passive
+    opt(1) = prefix + &quot;tabPersonalSelected.png&quot; &apos; active
+    opt(2) = &quot;wrap&quot; &apos; constraint
+	UnregisteredTabPersonal = opt
+End Function
+
+Function UnregisteredTabDelimiter(prefix)
+	Dim opt(2)
+    opt(0) = prefix + &quot;support.png&quot; &apos; passive
+    opt(1) = prefix + &quot;support.png&quot; &apos; active
+    opt(2) = &quot;wrap&quot; &apos; constraint
+	UnregisteredTabDelimiter = opt
+End Function
+
+</script:module>

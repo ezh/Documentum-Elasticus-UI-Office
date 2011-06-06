@@ -53,8 +53,6 @@ import com.sun.star.awt.XDialogProvider
 import com.sun.star.awt.XToolkit
 import com.sun.star.awt.XTopWindowListener
 import com.sun.star.awt.XWindowListener
-import com.sun.star.beans.NamedValue
-import com.sun.star.beans.PropertyState
 import com.sun.star.beans.PropertyValue
 import com.sun.star.deployment.XPackageInformationProvider
 import com.sun.star.frame.XFrame
@@ -69,11 +67,10 @@ import org.slf4j.LoggerFactory
 class ConfigWizard(val ctx: XComponentContext, val parent: XFrame) {
   private val mcf: XMultiComponentFactory = ctx.getServiceManager()
   private val logger : Logger = LoggerFactory.getLogger(this.getClass)
-  private val toolkit = O.SI[XToolkit](mcf, "com.sun.star.awt.Toolkit", ctx)
   private val packageInformationProvider = O.I[XPackageInformationProvider](ctx.getValueByName("/singletons/com.sun.star.deployment.PackageInformationProvider"))
   private val extensionLocation = packageInformationProvider.getPackageLocation(Extension.name)
   logger.info("active")
-  //private val xDialog = init()
+  private val xDialog = init()
   def init(): XDialog = {
     val xDialogProvider = O.SI[XDialogProvider](mcf, "com.sun.star.awt.DialogProvider", ctx)
     val dialogURL = "vnd.sun.star.script:DE_UI_OFFICE.BuildConfigurationWizard?location=application"

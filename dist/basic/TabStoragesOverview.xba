@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="TabStoragesOverview" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;  MRI = CreateUnoService(&quot;mytools.Mri&quot;)
+&apos;  MRI.inspect(firstCell)
+
+Private MRI As Variant
+
+Sub Main
+End Sub
+
+Sub ThemeDataSheetBeforeChange(document As Object, sheet As Object)
+End Sub
+
+Sub ThemeDataSheetNewTitle(cell As Object, sheet As Object, document As Object)
+  Dim cursor, addr, range, range2, celladdr As Variant
+  cursor = sheet.createCursor()
+  addr = cursor.getRangeAddress()
+  celladdr = cell.getCellAddress()
+  &apos; set title
+  range = sheet.getCellRangeByPosition(celladdr.column, celladdr.row, addr.EndColumn, celladdr.row)
+  range.cellBackColor = RGB(&amp;H69, &amp;H69, &amp;H69)
+  range.charWeight = 150
+  &apos; set title for components
+  range2 = sheet.getCellRangeByPosition(celladdr.column + 1, celladdr.row, addr.EndColumn, celladdr.row)
+  range2.IsTextWrapped  = True
+  range2.RotateAngle = 7000
+  range2.HoriJustify = 2
+  range2.VertJustify = 3
+  range2.RotateReference = 3
+End Sub
+
+Sub ThemeDataSheetFolderBeforeInsert(folder As Object, cell As Object, sheet As Object, document As Object)
+End Sub
+
+Sub ThemeDataSheetFolderSetName(folder As Object, cell As Object, sheet As Object, document As Objectt)
+  Dim cursor, addr, range, celladdr As Variant
+  cursor = sheet.createCursor()
+  addr = cursor.getRangeAddress()
+  celladdr = cell.getCellAddress()
+  range = sheet.getCellRangeByPosition(celladdr.column, celladdr.row, addr.EndColumn, celladdr.row)
+  range.cellBackColor = RGB(&amp;HA9, &amp;HA9, &amp;HA9)
+  range.charWeight = 150
+End Sub
+
+Sub ThemeDataSheetFolderAfterInsert(folder As Object, cell As Object, sheet As Object, document As Object)
+End Sub
+
+Sub ThemeDataSheetFileBeforeInsert(file As Object, cell As Object, sheet As Object, document As Object)
+End Sub
+
+Sub ThemeDataSheetFileSetName(file As Object, cell As Object, sheet As Object, document As Object)
+  cell.cellBackColor = RGB(&amp;HD3, &amp;HD3, &amp;HD3)
+End Sub
+
+Sub ThemeDataSheetFileAfterInsert(file As Object, cell As Object, sheet As Object, document As Object)
+End Sub
+
+Sub ThemeDataSheetAfterChange(document As Object, sheet As Object)
+  Dim cursor, addr, range, ranges, addrs
+	&apos; query visible
+  cursor = sheet.createCursor()
+  addr = cursor.getRangeAddress()
+  sheet.Rows(0).Height = 2500 &apos; 1/100mm
+  sheet.Columns(0).OptimalWidth = True
+  For i = 1 To addr.EndColumn
+    sheet.Columns(i).Width = 1200 &apos; 1/100mm
+  Next
+End Sub
+
+</script:module>

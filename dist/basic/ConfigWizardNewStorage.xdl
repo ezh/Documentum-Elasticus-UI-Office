@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="ConfigWizardNewStorage" dlg:left="9" dlg:top="107" dlg:width="163" dlg:height="81" dlg:closeable="true" dlg:moveable="true" dlg:title="New Storage Name">
+ <dlg:bulletinboard>
+  <dlg:text dlg:id="Label1" dlg:tab-index="0" dlg:left="2" dlg:top="2" dlg:width="158" dlg:height="8" dlg:value="Storage name"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="4" dlg:left="2" dlg:top="22" dlg:width="158" dlg:height="8" dlg:value="Storage type"/>
+  <dlg:text dlg:id="Label3" dlg:tab-index="1" dlg:left="2" dlg:top="42" dlg:width="158" dlg:height="8" dlg:help-text="for example file:///home/user/mystorage or http://www..." dlg:value="Storage URL"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="6" dlg:disabled="true" dlg:left="41" dlg:top="62" dlg:width="40" dlg:height="15" dlg:default="true" dlg:value="Accept" dlg:button-type="ok">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.cmdPrev_Initiated?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="7" dlg:left="84" dlg:top="62" dlg:width="40" dlg:height="15" dlg:default="true" dlg:value="Cancel" dlg:button-type="cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.cmdPrev_Initiated?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="StorageName" dlg:tab-index="2" dlg:left="2" dlg:top="12" dlg:width="158" dlg:height="8">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.page06_changeNewStorageName?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+  <dlg:menulist dlg:id="StorageType" dlg:tab-index="5" dlg:left="2" dlg:top="32" dlg:width="158" dlg:height="8" dlg:spin="true"/>
+  <dlg:textfield dlg:id="StorageURL" dlg:tab-index="3" dlg:left="2" dlg:top="52" dlg:width="158" dlg:height="8" dlg:help-text="for example file:///home/user/mystorage or http://www...">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.page06_changeNewStorageURL?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+ </dlg:bulletinboard>
+</dlg:window>

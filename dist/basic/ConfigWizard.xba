@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ConfigWizard" script:language="StarBasic">Option Explicit
+
+Private oDialog As Variant
+Private oDialogNewDatabase As Variant
+Private oDialogNewStorage As Variant
+Private MRI As Variant
+
+Private Extension As Variant
+Private Core As Variant
+Private Configuration As Variant
+Private UI As Variant
+
+Private sPreviousConfiguration As String
+Private sConfigurationName As String
+Private sDatabaseLocation As String
+Private sDatabaseSource As String
+Private sDatabaseService As String
+Private sUser As String
+
+Private fDatabaseMode As Boolean &apos; False - location, True - datasource
+Private fDialogOK As Boolean
+
+Function Dialog As com.sun.star.beans.PropertyValue
+    DialogWithArg(&quot;default&quot;)
+End Function
+
+Function DialogWithArg(configName As String) As com.sun.star.beans.PropertyValue
+  Extension = GetDefaultContext().getValueByName(&quot;/singletons/org.digimead.documentumelasticus.Extension&quot;)
+  Core = Extension.Core
+  Configuration = Extension.Configuration
+  UI = Core.getUI()
+  sPreviousConfiguration = Configuration.Active
+  sConfigurationName = configName
+  If IsNull(ui) Or IsEmpty(ui) Then
+    MsgBox(&quot;Documentum Elasticus service with interface XUIUNO not exists&quot;, 16)
+  	err = 18
+  End If
+  &apos; init
+  fDialogOK = false
+  oDialog = CreateUnoDialog(DialogLibraries.DE_UI_OFFICE.ConfigWizard)
+  oDialogNewDatabase = CreateUnoDialog(DialogLibraries.DE_UI_OFFICE.ConfigWizardNewDatabase)
+  oDialogNewStorage = CreateUnoDialog(DialogLibraries.DE_UI_OFFICE.ConfigWizardNewStorage)
+  oDialog.Model.ImageURL = ui.JarURL + &quot;/images/config.png&quot;
+  oDialog.title = &quot;Configuration Wizard for &apos;&quot; + sConfigurationName + &quot;&apos;&quot;
+  page01_Init(sConfigurationName)
+  &apos; execute
+  oDialog.execute()
+  If (fDialogOK = true) Then
+    Dim storages, i
+    storages = oDialog.getControl(&quot;page06StorageList&quot;).getItems()
+    Dim config(7 + ubound(storages)) As New com.sun.star.beans.PropertyValue
+    config(0).Name = &quot;Configuration&quot;
+    config(0).Value = sConfigurationName
+    config(1).Name = &quot;User&quot;
+    config(1).Value = sUser
+    config(3).Name = &quot;DatabaseLocation&quot;
+    config(3).Value = sDatabaseLocation
+    config(4).Name = &quot;DatabaseSource&quot;
+    config(4).Value = sDatabaseSource
+    config(5).Name = &quot;DatabaseService&quot;
+    config(5).Value = sDatabaseService
+    config(6).Name = &quot;UIService&quot;
+    config(6).Value = Core.getUIUNOService()
+    &apos; storages
+    For i = 0 to ubound(storages)
+      config(7+i).Name = &quot;Storage&quot;
+      config(7+i).Value = storages(i)
+    Next i
+    DialogWithArg = config
+  End If
+  &apos; destroy
+  oDialogNewStorage.dispose()
+  oDialogNewDatabase.dispose()
+  oDialog.dispose()
+End Function
+
+REM *****
+REM
+REM PAGE 1 CONFIG
+REM
+REM *****
+
+Sub page01_Init(configurationName As String)
+  Dim Page1TextFieldNew, Page1ListBoxExists
+  oDialog.getControl(&quot;cmdPrev&quot;).Model.Enabled = False
+  oDialog.getControl(&quot;page01ConfigurationName&quot;).Model.Text = configurationName
+  oDialog.getControl(&quot;page01ConfigurationsList&quot;).Model.StringItemList = Configuration.list()
+  page01_Check()
+End Sub
+
+Sub page01_Check
+  Dim configurationNameModel, fState, configurationName, i, configs
+  Dim oTextSearch, oOptions, oFound
+  
+  configurationNameModel = oDialog.getControl(&quot;page01ConfigurationName&quot;).Model
+  fState = 1 &apos; 1 - BAD, 2 - NEW, 3 - EXISTS
+  configs = Configuration.list()
+  configurationName = configurationNameModel.Text
+  &apos; search for inapropriate chartacters
+  &apos; prepare regexp search options
+  oTextSearch = CreateUnoService(&quot;com.sun.star.util.TextSearch&quot;)
+  oOptions = CreateUnoStruct(&quot;com.sun.star.util.SearchOptions&quot;)
+  oOptions.algorithmType = com.sun.star.util.SearchAlgorithms.REGEXP
+  oOptions.searchString = &quot;^([A-Za-z0-9]+[ A-Za-z0-9]+[A-Za-z0-9]+)$&quot;
+  oTextSearch.setOptions(oOptions)
+  &apos; search first substring
+  oFound = oTextSearch.searchForward(configurationName, 0, Len(configurationName))
+  If  oFound.subRegExpressions&gt;0 then
+    fState = 2
+  End If
+  &apos; compare with exists values
+  For i = 0 to UBound(configs)
+    If configs(i) = configurationName Then
+      fState = 3
+      Exit For
+    EndIf
+  Next i
+
+  If fState = 1 Then
+    configurationNameModel.TextColor = RGB(255, 0, 0)
+    oDialog.getControl(&quot;cmdNext&quot;).Model.Enabled = False
+  ElseIf fState = 2 Then
+    configurationNameModel.TextColor = RGB(0, 0, 255)
+    oDialog.getControl(&quot;cmdNext&quot;).Model.Enabled = True
+  Else
+    configurationNameModel.TextColor = 0
+    oDialog.getControl(&quot;cmdNext&quot;).Model.Enabled = True
+  EndIf
+End Sub
+
+Sub page01_selectConfigurationsList
+  Dim configurationNameModel, configurationsListModel
+  configurationsListModel = oDialog.getControl(&quot;page01ConfigurationsList&quot;).Model
+  configurationNameModel = oDialog.getControl(&quot;page01ConfigurationName&quot;).Model
+  configurationNameModel.Text = configurationsListModel.getSelectedItem()
+  configurationNameModel.TextColor = 1
+  &apos; TODO update other values
+  page01_Check
+End Sub
+
+Sub page01_changeConfigurationName
+  page01_Check()
+End Sub
+
+Sub page01_page02
+  sConfigurationName = oDialog.getControl(&quot;page01ConfigurationName&quot;).Model.Text
+  If Configuration.exists(sConfigurationName) Then
+    Configuration.load(sConfigurationName)
+    sDatabaseLocation = Core.getDatabase().getURL()
+    sDatabaseSource = Core.getDatabase().getName()
+    sDatabaseService = Core.getDatabase().getImplementationName()
+  Else
+    Core.clear()
+    sDatabaseLocation = &quot;&quot;
+    sDatabaseSource = &quot;&quot;
+    sDatabaseService = &quot;&quot;
+  End If
+  oDialog.title = &quot;Configuration Wizard for &apos;&quot; + oDialog.getControl(&quot;page01ConfigurationName&quot;).Model.Text + &quot;&apos;&quot;
+  oDialog.getControl(&quot;cmdPrev&quot;).Model.Enabled = True
+  page02_Init()
+  page03_Init()
+  If (sDatabaseLocation = &quot;&quot; And sDatabaseSource = &quot;&quot;) Then
+    oDialog.getControl(&quot;cmdNext&quot;).Model.Enabled = False
+  Else
+    oDialog.getControl(&quot;cmdNext&quot;).Model.Enabled = True
+  End If
+End Sub
+
+REM *****
+REM
+REM PAGE 2 DB LOCATION
+REM
+REM *****
+
+Sub page02_Init
+  Dim Page2OptionButtonLocation, Page2OptionButtonDatasource, database
+  oDialog.getControl(&quot;page02ModeLocation&quot;).setState(1)
+  oDialog.getControl(&quot;page02ModeDatasource&quot;).setState(0)
+  oDialog.getControl(&quot;page02DatabaseLocation&quot;).Model.Text = ConvertFromURL(sDatabaseLocation)
+End Sub
+
+Sub page02_cmdModeDatasource
+  oDialog.Model.Step = 3
+  oDialog.getControl(&quot;page02ModeDatasource&quot;).setState(0)
+  fDatabaseMode = True
+End Sub
+
+Sub page02_cmdNewDatabase
+   Dim oFolderPickerDlg, cPickedFolder, result, database
+   oFolderPickerDlg = createUnoService(&quot;com.sun.star.ui.dialogs.FolderPicker&quot;)
+   oFolderPickerDlg.execute()
+   cPickedFolder = oFolderPickerDlg.getDirectory()
+   oDialogNewDatabase.getControl(&quot;DatabaseLocation&quot;).Model.Text = &quot;file://&quot; + ConvertFromURL(cPickedFolder)
+   result = oDialogNewDatabase.execute()
+   If result = 1 Then
+     Dim databaseName
+     databaseName = oDialogNewDatabase.getControl(&quot;DatabaseName&quot;).Model.Text
+     sDatabaseLocation = cPickedFolder + &quot;/&quot; + databaseName + &quot;.odb&quot;
+     oDialog.getControl(&quot;page02DatabaseLocation&quot;).Model.Text = &quot;file://&quot; + ConvertFromURL(cPickedFolder) + &quot;/&quot; + databaseName + &quot;.odb&quot;
+     Core.clear()
+     database = Core.getOrCreateDatabase(&quot;&quot;, sDatabaseLocation, &quot;&quot;)
+     sDatabaseService = database.getImplementationName()
+     If Not (IsNull(database) or IsEmpty(database)) Then
+       oDialog.getControl(&quot;cmdNext&quot;).Model.Enabled = True
+     EndIf
+   EndIf
+End Sub
+
+Sub page02_changeNewDatabaseName
+  Dim DatabaseNameModel, newName
+  Dim oTextSearch, oOptions, oFound
+  DatabaseNameModel = oDialogNewDatabase.getControl(&quot;DatabaseName&quot;).Model
+  newName = DatabaseNameModel.Text
+  &apos; search for inapropriate chartacters
+  &apos; prepare regexp search options
+  oTextSearch = CreateUnoService(&quot;com.sun.star.util.TextSearch&quot;)
+  oOptions = CreateUnoStruct(&quot;com.sun.star.util.SearchOptions&quot;)
+  oOptions.algorithmType = com.sun.star.util.SearchAlgorithms.REGEXP
+  oOptions.searchString = &quot;^([A-Za-z0-9]+[ A-Za-z0-9]+[A-Za-z0-9]+)$&quot;
+  oTextSearch.setOptions(oOptions)
+  &apos; search first substring
+  oFound = oTextSearch.searchForward(newName, 0, Len(newName))
+  If  oFound.subRegExpressions&gt;0 then
+    &apos;good
+    DatabaseNameModel.TextColor = 0
+    oDialogNewDatabase.getControl(&quot;CommandButton1&quot;).Model.Enabled = True
+  Else
+    DatabaseNameModel.TextColor = RGB(255, 0, 0)
+    oDialogNewDatabase.getControl(&quot;CommandButton1&quot;).Model.Enabled = False
+  End If
+End Sub
+
+Sub page02_page04
+  page04_init()
+  page05_init()
+  page06_Init()
+End Sub
+
+REM *****
+REM
+REM PAGE 3 DB DATASOURCE
+REM
+REM *****
+
+Sub page03_Init
+  Dim Page3OptionButtonLocation, Page3OptionButtonDatasource
+  oDialog.getControl(&quot;page03ModeLocation&quot;).setState(0)
+  oDialog.getControl(&quot;page03ModeDatasource&quot;).setState(1)
+End Sub
+
+Sub page03_cmdModeLocation
+  oDialog.Model.Step = 2
+  oDialog.getControl(&quot;page03ModeLocation&quot;).setState(0)
+  fDatabaseMode = False
+End Sub
+
+Sub page03_page04
+  page04_init()
+  page05_init()
+  page06_Init()
+End Sub
+
+REM *****
+REM
+REM PAGE 4 USER
+REM
+REM *****
+
+Sub page04_Init
+  oDialog.getControl(&quot;page04UserLogin&quot;).Model.Text = Core.getUser().Login
+End Sub
+
+Sub cmdPage4CommandButtonNew
+End Sub
+
+Sub cmdPage4CommandButtonOpen
+End Sub
+
+Sub cmdPage4CommandButtonEdit
+End Sub
+
+Sub page04_page05
+  sUser = oDialog.getControl(&quot;page04UserLogin&quot;).Model.Text
+End Sub
+
+REM *****
+REM
+REM PAGE 5 GROUP
+REM
+REM *****
+
+Sub page05_Init
+  oDialog.getControl(&quot;page05GroupName&quot;).Model.Text = Core.getGroup().Name
+End Sub
+
+Sub cmdPage5CommandButtonNew
+End Sub
+
+Sub cmdPage5CommandButtonOpen
+End Sub
+
+Sub cmdPage5CommandButtonEdit
+End Sub
+
+REM *****
+REM
+REM PAGE 6 GROUP
+REM
+REM *****
+
+Dim page06_NewStorageName_OK
+Dim page06_NewStorageURL_OK
+
+Sub page06_Init
+  oDialogNewStorage.getControl(&quot;StorageType&quot;).Model.StringItemList = Core.getStorageUNOServices()
+  oDialogNewStorage.getControl(&quot;StorageType&quot;).selectItemPos(0, true)
+&apos;  Core.storages
+&apos;  Dim Page5TextFieldGroupName, group
+&apos;  Page5TextFieldGroupName = oDialog.getControl(&quot;Page5TextFieldGroupName&quot;)
+&apos;  group = Core.getGroup()
+&apos;  Page5TextFieldGroupName.Model.Text = group.Name
+End Sub
+
+Sub page06_Check
+End Sub
+
+Sub page06_cmdNewStorage
+  Dim result
+
+   oDialogNewStorage.getControl(&quot;StorageURL&quot;).Model.Text = &quot;&quot;
+   oDialogNewStorage.getControl(&quot;StorageName&quot;).Model.Text = &quot;&quot;
+   result = oDialogNewStorage.execute()
+   If result = 1 Then
+     Dim storageName, storageURL, storageType, storage
+     storageName = oDialogNewStorage.getControl(&quot;StorageName&quot;).Model.Text
+     storageType = oDialogNewStorage.getControl(&quot;StorageType&quot;).getSelectedItem()
+     storageURL = oDialogNewStorage.getControl(&quot;StorageURL&quot;).Model.Text
+     storage = Core.getOrCreateStorage(storageName, storageURL, storageType)
+     If Not (IsNull(storage) or IsEmpty(storage)) Then
+       oDialog.getControl(&quot;page06StorageList&quot;).addItem(StorageName, 0)
+       page06_Check()
+     End If
+   EndIf
+End Sub
+
+Sub page06_changeNewStorageName
+  Dim StorageNameModel, newName
+  Dim oTextSearch, oOptions, oFound
+  StorageNameModel = oDialogNewStorage.getControl(&quot;StorageName&quot;).Model
+  newName = StorageNameModel.Text
+  &apos; search for inapropriate chartacters
+  &apos; prepare regexp search options
+  oTextSearch = CreateUnoService(&quot;com.sun.star.util.TextSearch&quot;)
+  oOptions = CreateUnoStruct(&quot;com.sun.star.util.SearchOptions&quot;)
+  oOptions.algorithmType = com.sun.star.util.SearchAlgorithms.REGEXP
+  oOptions.searchString = &quot;^([A-Za-z0-9]+[ A-Za-z0-9]+[A-Za-z0-9]+)$&quot;
+  oTextSearch.setOptions(oOptions)
+  &apos; search first substring
+  oFound = oTextSearch.searchForward(newName, 0, Len(newName))
+  If  oFound.subRegExpressions&gt;0 then
+    &apos;good
+    StorageNameModel.TextColor = 0
+    page06_NewStorageName_OK = True
+  Else
+    StorageNameModel.TextColor = RGB(255, 0, 0)
+    page06_NewStorageName_OK = False
+  End If
+  page06_checkNewStorage()
+End Sub
+
+Sub page06_changeNewStorageURL
+  Dim oParser, StorageURLModel
+  Dim URL as new com.sun.star.util.URL 
+
+  StorageURLModel = oDialogNewStorage.getControl(&quot;StorageURL&quot;).Model
+  URL.Complete = StorageURLModel.Text
+  oParser = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+  If (oParser.parseStrict(URL) And URL.Name = &quot;&quot;) Then
+    &apos;good
+    StorageURLModel.TextColor = 0
+    page06_NewStorageURL_OK = True
+  Else
+    StorageURLModel.TextColor = RGB(255, 0, 0)
+    page06_NewStorageURL_OK = False
+  End If
+  page06_checkNewStorage()
+End Sub
+
+Sub page06_checkNewStorage
+  If (page06_NewStorageURL_OK = True And page06_NewStorageURL_OK = True) Then
+    oDialogNewStorage.getControl(&quot;CommandButton1&quot;).Model.Enabled = True
+  Else
+    oDialogNewStorage.getControl(&quot;CommandButton1&quot;).Model.Enabled = False
+  End If
+End Sub
+
+REM *****
+REM
+REM PAGE 0
+REM
+REM *****
+
+Sub page00_cmdNext
+  Dim cmdNext As Object
+  Dim cmdPrev As Object
+  Dim shift As Integer
+
+  shift = 1 
+  If (oDialog.Model.Step = 6) Then
+    fDialogOK = true
+    oDialog.endExecute()
+    Exit Sub
+  EndIf
+  cmdPrev = oDialog.getControl(&quot;cmdPrev&quot;)
+  cmdNext = oDialog.getControl(&quot;cmdNext&quot;)
+
+  If (oDialog.Model.Step = 1) Then
+    page01_page02()
+    If fDatabaseMode = True Then
+      shift = 2
+    EndIf
+  ElseIf (oDialog.Model.Step = 2) Then
+    page02_page04()
+    shift = 2
+  ElseIf (oDialog.Model.Step = 3) Then
+    page03_page04()
+  ElseIf (oDialog.Model.Step = 4) Then
+    page04_page05
+  ElseIf (oDialog.Model.Step = 5) Then
+    cmdNext.Model.Label = &quot;OK&quot;
+  EndIf
+
+  oDialog.Model.Step = oDialog.Model.Step + shift
+End Sub
+
+Sub cmdPrev_Initiated
+  Dim cmdNext As Object
+  Dim cmdPrev As Object
+  Dim shift As Integer
+  
+  shift = 1    
+  cmdPrev = oDialog.getControl(&quot;cmdPrev&quot;)
+  cmdNext = oDialog.getControl(&quot;cmdNext&quot;)
+  If (oDialog.Model.Step = 2) Then
+    cmdPrev.Model.Enabled = False
+    checkPage1
+  ElseIf (oDialog.Model.Step = 3) Then
+      shift = 2
+  ElseIf (oDialog.Model.Step = 4) Then
+    If fDatabase = False Then
+      shift = 2
+    EndIf
+  ElseIf (oDialog.Model.Step = 5) Then
+    cmdNext.Model.Enabled = True
+    cmdNext.Model.Label = &quot;Next &gt;&gt;&quot;
+  EndIf
+   
+    &apos;cmdPrev.Model.Enabled = False
+    &apos;cmdNext.Model.Enabled = True
+  oDialog.Model.Step = oDialog.Model.Step - shift
+End Sub
+
+Sub cmdP2PickFolder
+    cFolder = PickFolder(&quot;.&quot;)
+    MsgBox(cFolder)
+End Sub
+
+Function PickFolder( cFolder )
+   oFolderPickerDlg = createUnoService( &quot;com.sun.star.ui.dialogs.FolderPicker&quot; )
+
+   If Len( cFolder ) &gt; 0 Then
+      oFolderPickerDlg.setDisplayDirectory( ConvertToURL( cFolder ) )
+   EndIf
+      
+   oFolderPickerDlg.execute()
+   
+   cPickedFolder = oFolderPickerDlg.getDirectory()
+   
+   PickFolder = ConvertFromURL( cPickedFolder )
+End Function
+
+&apos;__________________________________________________________________________________________________________
+&apos; This is a good place for drawing instructions.
+&apos; This routine is called whenever the dialog has to be repainted
+Sub ThisDialog_windowPaint(oEvt)
+  Dim nDlgWidth, nDlgHeight, I, nX, nY, nWidth, nHeight, nRound
+
+  &apos;skip if there are other paint events in queue
+  If oEvt.count &gt; 0 Then Exit Sub
+  &apos;If Not fRepaint Then
+  &apos;  fRepaint = 1
+  &apos;  Exit Sub
+  &apos;End If
+  &apos;Wait(100)
+
+   nDlgWidth = oDialog.Peer.Size.Width
+   nDlgHeight = oDialog.Peer.Size.Height
+   &apos;oDialogGraph.drawRect(0,0,100,100) 
+   &apos;oDialogGraph.drawGradient(0, 100, oDialog.Peer.Size.Width, 220, oGrad)
+End Sub
+
+&apos;__________________________________________________________________________________________________________
+Sub ThisDialog_disposing(oEvt As Object)
+   &apos;nothing to do
+End Sub 
+
+</script:module>

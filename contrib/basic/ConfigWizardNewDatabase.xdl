@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="ConfigWizardNewDatabase" dlg:left="232" dlg:top="118" dlg:width="163" dlg:height="61" dlg:closeable="true" dlg:moveable="true" dlg:title="New Database Name">
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="4" dlg:disabled="true" dlg:left="40" dlg:top="44" dlg:width="40" dlg:height="15" dlg:default="true" dlg:value="Accept" dlg:button-type="ok">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.cmdPrev_Initiated?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="5" dlg:left="83" dlg:top="44" dlg:width="40" dlg:height="15" dlg:default="true" dlg:value="Cancel" dlg:button-type="cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.cmdPrev_Initiated?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:text dlg:id="Label1" dlg:tab-index="0" dlg:left="2" dlg:top="2" dlg:width="158" dlg:height="8" dlg:value="Database name"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="1" dlg:left="2" dlg:top="22" dlg:width="158" dlg:height="8" dlg:value="Database location"/>
+  <dlg:textfield dlg:id="DatabaseName" dlg:tab-index="2" dlg:left="2" dlg:top="12" dlg:width="158" dlg:height="8">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:DE_UI_OFFICE.ConfigWizard.page02_changeNewDatabaseName?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+  <dlg:textfield dlg:id="DatabaseLocation" dlg:tab-index="3" dlg:left="2" dlg:top="32" dlg:width="158" dlg:height="8" dlg:readonly="true"/>
+ </dlg:bulletinboard>
+</dlg:window>
