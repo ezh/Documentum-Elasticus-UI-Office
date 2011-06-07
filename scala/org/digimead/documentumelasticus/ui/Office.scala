@@ -386,7 +386,7 @@ object Office extends XBaseInfo {
     val oTopWindow = toolkit.createWindow(oTopWindowDescriptor)
     val oTopWindowListener = new TopWindowListener()
     O.I[XTopWindow](oTopWindow).addTopWindowListener(oTopWindowListener)
-    val xTopWindow = O.I[XWindow](oTopWindow)
+    val xTopWindow: XWindow = O.I[XWindow](oTopWindow)
     xTopWindow.addWindowListener(oTopWindowListener)
     val xTopFrame = O.SI[XFrame](mcf, "com.sun.star.frame.Frame", ctx)
     O.I[XCloseBroadcaster](xTopFrame).addCloseListener(new TopFrameCloseListener())

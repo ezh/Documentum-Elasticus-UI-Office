@@ -37,14 +37,15 @@ class Unregistered(tmcf: XMultiComponentFactory,
   val uiRegisterCommercialLight = new RegisterCommercialLight(mcf, imagePathPrefix, commercial, ctx)
   // personal
   val personal = new OControlContainer(mcf, "Personal", right, ctx, new MigLayout())
+  // "sgx"
+  val uiRegisterPersonalPremium = new RegisterPersonalPremium(mcf, imagePathPrefix, personal, ctx)
+  // "sgx"
+  val uiRegisterPersonalPlus = new RegisterPersonalPlus(mcf, imagePathPrefix, personal, ctx)
+  // "sgx"
+  val uiRegisterPersonalSolo = new RegisterPersonalSolo(mcf, imagePathPrefix, personal, ctx)
   // refund label
   val refundTargetLabel = new OControl(mcf, "RefundTargetLabel", "UnoControlFixedText", right, ctx)
   refundTargetLabel.model.setPropertyValue("Label", "all funds for developing + your price for your design")
-  
-/*  
-  new RegisterPersonalPremium(mcf, imgPath, personalTab, ctx).setConstraint("sgx")
-  new RegisterPersonalPlus(mcf, imgPath, personalTab, ctx).setConstraint("sgx")
-  new RegisterPersonalSolo(mcf, imgPath, personalTab, ctx).setConstraint("sgx")*/
   load()
   update()
   def reload() {
