@@ -5,6 +5,11 @@ import org.digimead.documentumelasticus.helper.Library
 import org.digimead.documentumelasticus.ui.{MigLayout, OControl, OControlContainer}
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import com.sun.star.awt.MouseEvent
+import com.sun.star.awt.XMouseListener
+import com.sun.star.awt.XWindow
+import com.sun.star.lang.EventObject
+import org.digimead.documentumelasticus.helper.O
 
 class Tabs(val tid: String,
     val prefix: String,
@@ -104,13 +109,21 @@ class Tabs(val tid: String,
     tabResources(delimiterName + position.toString)._1.setConstraint(opt(2))
   }
   def add(name: String, callback: Any) {
+    implicit def actionPerformedWrapper(closure: (MouseEvent) => Unit) =
+      new XMouseListener() {
+        def mousePressed(e: MouseEvent) = closure(e)
+        def mouseReleased(e: MouseEvent) {}
+        def mouseEntered(e: MouseEvent) {}
+        def mouseExited(e: MouseEvent) {}
+        def disposing(e: EventObject) {}
+      }
     val (l1, l2) = controls splitAt (controls.length - 2)
     controls = l1
     if (tabs.length == 0) {
       // first tab
       tabs += name
       tabResources(name) = (new OControl(mcf, name, "UnoControlImageControl", this, ctx, arg ⇒ {
-        arg.model.setPropertyValue("ScaleImage", false)
+            arg.model.setPropertyValue("ScaleImage", false)
         arg.model.setPropertyValue("Border", 0.toShort)
       }), null, null)
       loadTab(name)
@@ -132,7 +145,31 @@ class Tabs(val tid: String,
       loadTab(name)
     }
     controls = controls ++ l2
-    /*if (tabs.length != 0) {
+    // add mouse click
+    O.I[XWindow](tabResources(name)._1.control.getPeer).addMouseListener((e: MouseEvent) => {clickTab(name)})
+  }
+  def clickTab(name: String) {
+    logger.warn("click tab " + name)
+    if (tabActive != name) {
+      
+    }
+  }
+}
+//        arg.model.setPropertyValue("ImageURL", iconSelected)
+/*
+,
+    val iconTabBegin: String,
+    val iconTabBeginSelected: String,
+    val iconTabMiddleStart: String,
+    val iconTabMiddleStartSelected: String,
+    val iconTabMiddleEnd: String,
+    val iconTabMiddleEndSelected: String,
+    val iconTabEnd: String,
+    val iconTabEndSelected: String,
+    val iconTabFiller: String*/
+
+/*
+ *     /*if (tabs.length != 0) {
       if (tabs.length - 1 != selectedPos) {
         val imgEnd = new OControl(mcf, "imgEnd", "UnoControlImageControl", this, ctx, arg ⇒ {
           arg.model.setPropertyValue("ScaleImage", false)
@@ -157,17 +194,5 @@ class Tabs(val tid: String,
       })
     }
     tabs += Tuple3(tabControl, icon, iconSelected)*/
-  }
-}
-//        arg.model.setPropertyValue("ImageURL", iconSelected)
-/*
-,
-    val iconTabBegin: String,
-    val iconTabBeginSelected: String,
-    val iconTabMiddleStart: String,
-    val iconTabMiddleStartSelected: String,
-    val iconTabMiddleEnd: String,
-    val iconTabMiddleEndSelected: String,
-    val iconTabEnd: String,
-    val iconTabEndSelected: String,
-    val iconTabFiller: String*/
+
+ */

@@ -29,19 +29,13 @@ class Unregistered(tmcf: XMultiComponentFactory,
   val right = new OControlContainer(mcf, "Right", this, ctx, new MigLayout())
   // commercial
   val commercial = new OControlContainer(mcf, "Commercial", right, ctx, new MigLayout())
-  // "sgx"
   val uiRegisterCommercialPremium = new RegisterCommercialPremium(mcf,  imagePathPrefix, commercial, ctx)
-  // "sgx"
   val uiRegisterCommercialPlus = new RegisterCommercialPlus(mcf, imagePathPrefix, commercial, ctx)
-  // "sgx"
   val uiRegisterCommercialLight = new RegisterCommercialLight(mcf, imagePathPrefix, commercial, ctx)
   // personal
   val personal = new OControlContainer(mcf, "Personal", right, ctx, new MigLayout())
-  // "sgx"
   val uiRegisterPersonalPremium = new RegisterPersonalPremium(mcf, imagePathPrefix, personal, ctx)
-  // "sgx"
   val uiRegisterPersonalPlus = new RegisterPersonalPlus(mcf, imagePathPrefix, personal, ctx)
-  // "sgx"
   val uiRegisterPersonalSolo = new RegisterPersonalSolo(mcf, imagePathPrefix, personal, ctx)
   // refund label
   val refundTargetLabel = new OControl(mcf, "RefundTargetLabel", "UnoControlFixedText", right, ctx)
@@ -51,6 +45,12 @@ class Unregistered(tmcf: XMultiComponentFactory,
   def reload() {
     logger.trace("reload")
     tab.reload()
+    uiRegisterCommercialPremium.reload()
+    uiRegisterCommercialPlus.reload()
+    uiRegisterCommercialLight.reload()
+    uiRegisterPersonalPremium.reload()
+    uiRegisterPersonalPlus.reload()
+    uiRegisterPersonalSolo.reload()
     load()
     layout(true)
   }

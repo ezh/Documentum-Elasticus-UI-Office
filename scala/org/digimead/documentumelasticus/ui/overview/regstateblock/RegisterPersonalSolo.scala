@@ -5,14 +5,13 @@ import com.sun.star.uno.XComponentContext
 import org.digimead.documentumelasticus.ui.OControlContainer
 
 class RegisterPersonalSolo(tmcf: XMultiComponentFactory,
-    tbase: String,
+    tprefix: String,
     tparent: OControlContainer,
     tctx: XComponentContext) extends RegisterOption(tmcf,
         "RegisterPersonalSolo",
         "Solo",
-        tbase + "PSolo.png",
-        tbase + "sign.png",
-        Array((tbase + "satisfaction.png", "Satisfaction"), (tbase + "updates.png", "Updates")),
+        tprefix,
+        Array("Satisfaction", "Updates"),
         tparent,
         tctx) {
 

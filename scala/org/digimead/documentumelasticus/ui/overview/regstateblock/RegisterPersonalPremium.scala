@@ -5,14 +5,13 @@ import com.sun.star.uno.XComponentContext
 import org.digimead.documentumelasticus.ui.OControlContainer
 
 class RegisterPersonalPremium(tmcf: XMultiComponentFactory,
-    tbase: String,
+    tprefix: String,
     tparent: OControlContainer,
     tctx: XComponentContext) extends RegisterOption(tmcf,
         "RegisterPersonalPremium",
         "Premium",
-        tbase + "PPremium.png",
-        tbase + "sign.png",
-        Array((tbase + "satisfaction.png", "Satisfaction"), (tbase + "updates.png", "Updates"), (tbase + "influence.png", "Influence"), (tbase + "support.png", "Support")),
+        tprefix,
+        Array("Satisfaction", "Updates", "Influence", "Support"),
         tparent,
         tctx) {
 

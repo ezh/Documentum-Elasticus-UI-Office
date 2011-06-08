@@ -4,9 +4,11 @@
 
 Sub Main
   extension = GetDefaultContext().getValueByName(&quot;/singletons/org.digimead.documentumelasticus.Extension&quot;)
+  extension.loadComponent(&quot;org.digimead.documentumelasticus.ui._&quot;)
   factory = extension.Factory
   ui = factory.getUI
   ui.reload
+  ui.show
 End Sub
 
 Function RegStateBlock()
@@ -14,7 +16,7 @@ Function RegStateBlock()
 	opt(0) = &quot;hidemode 3, insets 0, gap 0&quot; &apos; MigLayout LC
 	opt(1) = &quot;[c, grow, fill]&quot; &apos; MigLayout AC
 	opt(2) = &quot;[c, grow, fill]&quot; &apos; MigLayout AC
-	opt(3) = &quot;height 300!, wrap&quot; &apos; container
+	opt(3) = &quot;wrap&quot; &apos; container
 	RegStateBlock = opt
 End Function
 
@@ -30,7 +32,7 @@ Function Unregistered()
     opt(6) = &quot;&quot; &apos; left MigLayout AC
     opt(7) = &quot;&quot; &apos; left constraint
     REM right
-    opt(8) = &quot;debug, hidemode 3, insets 0, gap 0&quot; &apos; right MigLayout LC
+    opt(8) = &quot;hidemode 3, insets 0, gap 0&quot; &apos; right MigLayout LC
     opt(9) = &quot;[grow, fill]&quot; &apos; right MigLayout AC
     opt(10) = &quot;[grow, fill][min]&quot; &apos; right MigLayout AC
     opt(11) = &quot;&quot; &apos; right constraint
@@ -40,7 +42,7 @@ Function Unregistered()
     opt(14) = &quot;[grow, fill]&quot; &apos; commercial MigLayout AC
     opt(15) = &quot;split&quot; &apos; commercial constraint
     REM personal
-    opt(16) = &quot;debug, insets 0, gap 0&quot; &apos; personal MigLayout LC
+    opt(16) = &quot;insets 0, gap 0&quot; &apos; personal MigLayout LC
     opt(17) = &quot;[grow, fill][grow, fill][grow, fill]&quot; &apos; personal MigLayout AC
     opt(18) = &quot;[grow, fill]&quot; &apos; personal MigLayout AC
     opt(19) = &quot;wrap&quot; &apos; personal constraint
@@ -51,7 +53,7 @@ End Function
 
 Function UnregisteredTab(prefix)
 	Dim opt(11)
-    opt(0) = &quot;debug, inset 0, gap 0, ltr&quot; &apos; container MigLayout LC
+    opt(0) = &quot;inset 0, gap 0, ltr&quot; &apos; container MigLayout LC
     opt(1) = &quot;&quot; &apos; container MigLayout AC
     opt(2) = &quot;&quot; &apos; container MigLayout AC
     opt(3) = &quot;&quot; &apos; container constraint
@@ -84,10 +86,301 @@ End Function
 
 Function UnregisteredTabDelimiter(prefix)
 	Dim opt(2)
-    opt(0) = prefix + &quot;support.png&quot; &apos; passive
-    opt(1) = prefix + &quot;support.png&quot; &apos; active
+    opt(0) = prefix + &quot;tabDelimiterTop.png&quot; &apos; passive
+    opt(1) = prefix + &quot;tabDelimiterTop.png&quot; &apos; active
     opt(2) = &quot;wrap&quot; &apos; constraint
 	UnregisteredTabDelimiter = opt
+End Function
+
+Function RegisterCommercialPremium(prefix)
+	Dim opt(41)
+    opt(0) = &quot;inset 0, gap 0, nocache, align 50% 50%&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;sgx&quot; &apos; container constraint
+    opt(4) = &quot;http://www.ru&quot;
+    REM block
+    opt(5) = &quot;&quot; &apos; block MigLayout LC
+    opt(6) = &quot;&quot; &apos; block MigLayout AC
+    opt(7) = &quot;[]0[][]&quot; &apos; block MigLayout AC
+    opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
+    opt(9) = &quot;http://www.ru&quot;
+    REM icon
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(11) = &quot;&quot; &apos; icon constraint
+    opt(12) = &quot;http://www.ru&quot;
+    REM title
+    opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
+    opt(14) = 20 &apos; title Height
+    opt(15) = &quot;wrap&quot;
+    opt(16) = &quot;http://www.ru&quot;
+    REM line
+    opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
+    opt(18) = &quot;http://www.ru&quot;
+    REM sign up
+    opt(19) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(20) = &quot;wrap&quot; &apos; icon constraint
+    opt(21) = &quot;http://www.ru&quot;
+    REM benefits
+    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(24) = &quot;http://www.ru&quot;
+    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(26) = &quot;http://www.ru&quot;
+    &apos;&apos;&apos;&apos;&apos;
+    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(29) = &quot;http://www.ru&quot;
+    opt(30) = &quot;v&quot; &apos; label constraint
+    opt(31) = &quot;http://www.ru&quot;
+    &apos;&apos;&apos;&apos;&apos;
+    opt(32) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(33) = &quot;&quot; &apos; icon constraint
+    opt(34) = &quot;http://www.ru&quot;
+    opt(35) = &quot;wrap&quot; &apos; label constraint
+    opt(36) = &quot;http://www.ru&quot;
+    &apos;&apos;&apos;&apos;&apos;
+    opt(37) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(38) = &quot;&quot; &apos; icon constraint
+    opt(39) = &quot;http://www.ru&quot;
+    opt(40) = &quot;wrap&quot; &apos; label constraint
+    opt(41) = &quot;http://www.ru&quot;
+	RegisterCommercialPremium = opt
+End Function
+
+Function RegisterCommercialPlus(prefix)
+	Dim opt(36)
+    opt(0) = &quot;inset 0, gap 0, nocache, align 50% 50%&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;sgx&quot; &apos; container constraint
+    opt(4) = &quot;http://www.ru&quot;
+    REM block
+    opt(5) = &quot;&quot; &apos; block MigLayout LC
+    opt(6) = &quot;&quot; &apos; block MigLayout AC
+    opt(7) = &quot;[]0[][]&quot; &apos; block MigLayout AC
+    opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
+    opt(9) = &quot;http://www.ru&quot;
+    REM icon
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(11) = &quot;&quot; &apos; icon constraint
+    opt(12) = &quot;http://www.ru&quot;
+    REM title
+    opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
+    opt(14) = 20 &apos; title Height
+    opt(15) = &quot;wrap&quot;
+    opt(16) = &quot;http://www.ru&quot;
+    REM line
+    opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
+    opt(18) = &quot;http://www.ru&quot;
+    REM sign up
+    opt(19) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(20) = &quot;wrap&quot; &apos; icon constraint
+    opt(21) = &quot;http://www.ru&quot;
+    REM benefits
+    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(24) = &quot;http://www.ru&quot;
+    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(26) = &quot;http://www.ru&quot;
+    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(29) = &quot;http://www.ru&quot;
+    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(31) = &quot;http://www.ru&quot;
+    opt(32) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(33) = &quot;&quot; &apos; icon constraint
+    opt(34) = &quot;http://www.ru&quot;
+    opt(35) = &quot;wrap&quot; &apos; label constraint
+    opt(36) = &quot;http://www.ru&quot;
+	RegisterCommercialPlus = opt
+End Function
+
+Function RegisterCommercialLight(prefix)
+	Dim opt(31)
+    opt(0) = &quot;inset 0, gap 0, nocache, align 50% 50%&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;sgx&quot; &apos; container constraint
+    opt(4) = &quot;http://www.ru&quot;
+    REM block
+    opt(5) = &quot;&quot; &apos; block MigLayout LC
+    opt(6) = &quot;&quot; &apos; block MigLayout AC
+    opt(7) = &quot;[]0[][]&quot; &apos; block MigLayout AC
+    opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
+    opt(9) = &quot;http://www.ru&quot;
+    REM icon
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(11) = &quot;&quot; &apos; icon constraint
+    opt(12) = &quot;http://www.ru&quot;
+    REM title
+    opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
+    opt(14) = 20 &apos; title Height
+    opt(15) = &quot;wrap&quot;
+    opt(16) = &quot;http://www.ru&quot;
+    REM line
+    opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
+    opt(18) = &quot;http://www.ru&quot;
+    REM sign up
+    opt(19) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(20) = &quot;wrap&quot; &apos; icon constraint
+    opt(21) = &quot;http://www.ru&quot;
+    REM benefits
+    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(24) = &quot;http://www.ru&quot;
+    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(26) = &quot;http://www.ru&quot;
+    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(29) = &quot;http://www.ru&quot;
+    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(31) = &quot;http://www.ru&quot;
+	RegisterCommercialLight = opt
+End Function
+
+Function RegisterPersonalPremium(prefix)
+	Dim opt(41)
+    opt(0) = &quot;inset 0, gap 0, nocache, align 50% 50%&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;sgx&quot; &apos; container constraint
+    opt(4) = &quot;http://www.ru&quot;
+    REM block
+    opt(5) = &quot;&quot; &apos; block MigLayout LC
+    opt(6) = &quot;&quot; &apos; block MigLayout AC
+    opt(7) = &quot;[]0[][]&quot; &apos; block MigLayout AC
+    opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
+    opt(9) = &quot;http://www.ru&quot;
+    REM icon
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(11) = &quot;&quot; &apos; icon constraint
+    opt(12) = &quot;http://www.ru&quot;
+    REM title
+    opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
+    opt(14) = 20 &apos; title Height
+    opt(15) = &quot;wrap&quot;
+    opt(16) = &quot;http://www.ru&quot;
+    REM line
+    opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
+    opt(18) = &quot;http://www.ru&quot;
+    REM sign up
+    opt(19) = prefix + &quot;CPlus.png&quot; &apos; icon
+    opt(20) = &quot;spanx&quot; &apos; icon constraint
+    opt(21) = &quot;http://www.ru&quot;
+    REM benefits
+    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(24) = &quot;http://www.ru&quot;
+    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(26) = &quot;http://www.ru&quot;
+    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(29) = &quot;http://www.ru&quot;
+    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(31) = &quot;http://www.ru&quot;
+    opt(32) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(33) = &quot;&quot; &apos; icon constraint
+    opt(34) = &quot;http://www.ru&quot;
+    opt(35) = &quot;wrap&quot; &apos; label constraint
+    opt(36) = &quot;http://www.ru&quot;
+    opt(37) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(38) = &quot;&quot; &apos; icon constraint
+    opt(39) = &quot;http://www.ru&quot;
+    opt(40) = &quot;wrap&quot; &apos; label constraint
+    opt(41) = &quot;http://www.ru&quot;
+	RegisterPersonalPremium = opt
+End Function
+
+Function RegisterPersonalPlus(prefix)
+	Dim opt(36)
+    opt(0) = &quot;inset 0, gap 0, nocache, align 50% 50%&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;sgx&quot; &apos; container constraint
+    opt(4) = &quot;http://www.ru&quot;
+    REM block
+    opt(5) = &quot;&quot; &apos; block MigLayout LC
+    opt(6) = &quot;&quot; &apos; block MigLayout AC
+    opt(7) = &quot;[]0[][]&quot; &apos; block MigLayout AC
+    opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
+    opt(9) = &quot;http://www.ru&quot;
+    REM icon
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(11) = &quot;&quot; &apos; icon constraint
+    opt(12) = &quot;http://www.ru&quot;
+    REM title
+    opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
+    opt(14) = 20 &apos; title Height
+    opt(15) = &quot;wrap&quot;
+    opt(16) = &quot;http://www.ru&quot;
+    REM line
+    opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
+    opt(18) = &quot;http://www.ru&quot;
+    REM sign up
+    opt(19) = prefix + &quot;CPlus.png&quot; &apos; icon
+    opt(20) = &quot;spanx&quot; &apos; icon constraint
+    opt(21) = &quot;http://www.ru&quot;
+    REM benefits
+    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(24) = &quot;http://www.ru&quot;
+    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(26) = &quot;http://www.ru&quot;
+    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(29) = &quot;http://www.ru&quot;
+    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(31) = &quot;http://www.ru&quot;
+    opt(32) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(33) = &quot;&quot; &apos; icon constraint
+    opt(34) = &quot;http://www.ru&quot;
+    opt(35) = &quot;wrap&quot; &apos; label constraint
+    opt(36) = &quot;http://www.ru&quot;
+	RegisterPersonalPlus = opt
+End Function
+
+Function RegisterPersonalSolo(prefix)
+	Dim opt(31)
+    opt(0) = &quot;inset 0, gap 0, nocache, align 50% 50%&quot; &apos; container MigLayout LC
+    opt(1) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(2) = &quot;[c, fill]&quot; &apos; container MigLayout AC
+    opt(3) = &quot;sgx&quot; &apos; container constraint
+    opt(4) = &quot;http://www.ru&quot;
+    REM block
+    opt(5) = &quot;&quot; &apos; block MigLayout LC
+    opt(6) = &quot;&quot; &apos; block MigLayout AC
+    opt(7) = &quot;[]0[][]&quot; &apos; block MigLayout AC
+    opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
+    opt(9) = &quot;http://www.ru&quot;
+    REM icon
+    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(11) = &quot;&quot; &apos; icon constraint
+    opt(12) = &quot;http://www.ru&quot;
+    REM title
+    opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
+    opt(14) = 20 &apos; title Height
+    opt(15) = &quot;wrap&quot;
+    opt(16) = &quot;http://www.ru&quot;
+    REM line
+    opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
+    opt(18) = &quot;http://www.ru&quot;
+    REM sign up
+    opt(19) = prefix + &quot;CPlus.png&quot; &apos; icon
+    opt(20) = &quot;span, growx&quot; &apos; icon constraint
+    opt(21) = &quot;http://www.ru&quot;
+    REM benefits
+    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(24) = &quot;http://www.ru&quot;
+    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(26) = &quot;http://www.ru&quot;
+    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(29) = &quot;http://www.ru&quot;
+    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(31) = &quot;http://www.ru&quot;
+    RegisterPersonalSolo = opt
 End Function
 
 </script:module>
