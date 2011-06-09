@@ -53,7 +53,7 @@ End Function
 
 Function UnregisteredTab(prefix)
 	Dim opt(11)
-    opt(0) = &quot;inset 0, gap 0, ltr&quot; &apos; container MigLayout LC
+    opt(0) = &quot;debug, inset 0, gap 0, ltr&quot; &apos; container MigLayout LC
     opt(1) = &quot;&quot; &apos; container MigLayout AC
     opt(2) = &quot;&quot; &apos; container MigLayout AC
     opt(3) = &quot;&quot; &apos; container constraint
@@ -253,41 +253,41 @@ Function RegisterPersonalPremium(prefix)
     opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
     opt(9) = &quot;http://www.ru&quot;
     REM icon
-    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(10) = prefix + &quot;PPremium.png&quot; &apos; icon
     opt(11) = &quot;&quot; &apos; icon constraint
     opt(12) = &quot;http://www.ru&quot;
     REM title
     opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
     opt(14) = 20 &apos; title Height
-    opt(15) = &quot;wrap&quot;
+    opt(15) = &quot;spanx, growx, wrap&quot;
     opt(16) = &quot;http://www.ru&quot;
     REM line
     opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
     opt(18) = &quot;http://www.ru&quot;
     REM sign up
-    opt(19) = prefix + &quot;CPlus.png&quot; &apos; icon
-    opt(20) = &quot;spanx&quot; &apos; icon constraint
+    opt(19) = prefix + &quot;signup.png&quot; &apos; icon
+    opt(20) = &quot;spanx, growx, pushy, aligny bottom&quot; &apos; icon constraint
     opt(21) = &quot;http://www.ru&quot;
     REM benefits
-    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(22) = prefix + &quot;support.png&quot; &apos; icon
+    opt(23) = &quot;gapleft para&quot; &apos; icon constraint
     opt(24) = &quot;http://www.ru&quot;
-    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(25) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(26) = &quot;http://www.ru&quot;
-    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(27) = prefix + &quot;support.png&quot; &apos; icon
+    opt(28) = &quot;gapleft para&quot; &apos; icon constraint
     opt(29) = &quot;http://www.ru&quot;
-    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(30) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(31) = &quot;http://www.ru&quot;
-    opt(32) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(33) = &quot;&quot; &apos; icon constraint
+    opt(32) = prefix + &quot;support.png&quot; &apos; icon
+    opt(33) = &quot;gapleft para&quot; &apos; icon constraint
     opt(34) = &quot;http://www.ru&quot;
-    opt(35) = &quot;wrap&quot; &apos; label constraint
+    opt(35) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(36) = &quot;http://www.ru&quot;
-    opt(37) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(38) = &quot;&quot; &apos; icon constraint
+    opt(37) = prefix + &quot;support.png&quot; &apos; icon
+    opt(38) = &quot;gapleft para&quot; &apos; icon constraint
     opt(39) = &quot;http://www.ru&quot;
-    opt(40) = &quot;wrap&quot; &apos; label constraint
+    opt(40) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(41) = &quot;http://www.ru&quot;
 	RegisterPersonalPremium = opt
 End Function
@@ -306,36 +306,36 @@ Function RegisterPersonalPlus(prefix)
     opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
     opt(9) = &quot;http://www.ru&quot;
     REM icon
-    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(10) = prefix + &quot;PPlus.png&quot; &apos; icon
     opt(11) = &quot;&quot; &apos; icon constraint
     opt(12) = &quot;http://www.ru&quot;
     REM title
     opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
     opt(14) = 20 &apos; title Height
-    opt(15) = &quot;wrap&quot;
+    opt(15) = &quot;spanx, growx, wrap&quot;
     opt(16) = &quot;http://www.ru&quot;
     REM line
     opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
     opt(18) = &quot;http://www.ru&quot;
     REM sign up
-    opt(19) = prefix + &quot;CPlus.png&quot; &apos; icon
-    opt(20) = &quot;spanx&quot; &apos; icon constraint
+    opt(19) = prefix + &quot;signup.png&quot; &apos; icon
+    opt(20) = &quot;spanx, pushy, aligny bottom&quot; &apos; icon constraint
     opt(21) = &quot;http://www.ru&quot;
     REM benefits
-    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(22) = prefix + &quot;support.png&quot; &apos; icon
+    opt(23) = &quot;gapleft para&quot; &apos; icon constraint
     opt(24) = &quot;http://www.ru&quot;
-    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(25) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(26) = &quot;http://www.ru&quot;
-    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(27) = prefix + &quot;support.png&quot; &apos; icon
+    opt(28) = &quot;gapleft para&quot; &apos; icon constraint
     opt(29) = &quot;http://www.ru&quot;
-    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(30) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(31) = &quot;http://www.ru&quot;
-    opt(32) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(33) = &quot;&quot; &apos; icon constraint
+    opt(32) = prefix + &quot;support.png&quot; &apos; icon
+    opt(33) = &quot;gapleft para&quot; &apos; icon constraint
     opt(34) = &quot;http://www.ru&quot;
-    opt(35) = &quot;wrap&quot; &apos; label constraint
+    opt(35) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(36) = &quot;http://www.ru&quot;
 	RegisterPersonalPlus = opt
 End Function
@@ -354,31 +354,31 @@ Function RegisterPersonalSolo(prefix)
     opt(8) = &quot;pushy, growy, wrap&quot; &apos; block constraint
     opt(9) = &quot;http://www.ru&quot;
     REM icon
-    opt(10) = prefix + &quot;tabAfter.png&quot; &apos; icon
+    opt(10) = prefix + &quot;PSolo.png&quot; &apos; icon
     opt(11) = &quot;&quot; &apos; icon constraint
     opt(12) = &quot;http://www.ru&quot;
     REM title
     opt(13) = com.sun.star.awt.FontWeight.BOLD &apos; title Weight
     opt(14) = 20 &apos; title Height
-    opt(15) = &quot;wrap&quot;
+    opt(15) = &quot;spanx, growx, wrap&quot;
     opt(16) = &quot;http://www.ru&quot;
     REM line
     opt(17) = &quot;spanx, growx, wrap&quot; &apos; line constraint
     opt(18) = &quot;http://www.ru&quot;
     REM sign up
-    opt(19) = prefix + &quot;CPlus.png&quot; &apos; icon
-    opt(20) = &quot;span, growx&quot; &apos; icon constraint
+    opt(19) = prefix + &quot;signup.png&quot; &apos; icon
+    opt(20) = &quot;spanx, pushy, aligny bottom&quot; &apos; icon constraint
     opt(21) = &quot;http://www.ru&quot;
     REM benefits
-    opt(22) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(23) = &quot;&quot; &apos; icon constraint
+    opt(22) = prefix + &quot;support.png&quot; &apos; icon
+    opt(23) = &quot;gapleft para&quot; &apos; icon constraint
     opt(24) = &quot;http://www.ru&quot;
-    opt(25) = &quot;wrap&quot; &apos; label constraint
+    opt(25) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(26) = &quot;http://www.ru&quot;
-    opt(27) = prefix + &quot;tabAfter.png&quot; &apos; icon
-    opt(28) = &quot;&quot; &apos; icon constraint
+    opt(27) = prefix + &quot;support.png&quot; &apos; icon
+    opt(28) = &quot;gapleft para&quot; &apos; icon constraint
     opt(29) = &quot;http://www.ru&quot;
-    opt(30) = &quot;wrap&quot; &apos; label constraint
+    opt(30) = &quot;alignx left, growx, wrap&quot; &apos; label constraint
     opt(31) = &quot;http://www.ru&quot;
     RegisterPersonalSolo = opt
 End Function
