@@ -54,15 +54,16 @@ import com.sun.star.uno.XComponentContext
 import com.sun.star.util.{CloseVetoException, XCloseListener, XCloseBroadcaster}
 import java.util.concurrent.atomic.AtomicBoolean
 import net.miginfocom.layout.{PlatformDefaults, ConstraintParser, ComponentWrapper, BoundSize, LayoutCallback}
-import org.digimead.documentumelasticus.component.{XBaseInfo, XBase}
+import org.digimead.documentumelasticus.component.{XBaseObject, XBaseClass}
 import org.digimead.documentumelasticus.helper._
 import org.digimead.documentumelasticus.ui.wizard.ConfigWizard
 import org.digimead.documentumelasticus._
+import org.slf4j.LoggerFactory
 import org.slf4j.{LoggerFactory, Logger}
 import scala.collection.mutable.ArrayBuffer
 
 class Office(val ctx: XComponentContext) extends XUI {
-  protected val logger = LoggerFactory.getLogger(this.getClass)
+  protected val log = LoggerFactory.getLogger(this.getClass)
   var componentSingleton = Office.componentSingleton
   val componentTitle = Office.componentTitle
   val componentDescription = Office.componentDescription
@@ -71,7 +72,7 @@ class Office(val ctx: XComponentContext) extends XUI {
   val componentServices = Office.componentServices
   val componentDisabled = Office.componentDisabled
   initialize(Array()) // initialized by default
-  logger.info(componentName + " active")
+  log.info(componentName + " active")
 
   // -----------------------
   // - implement trait XUI -
@@ -82,7 +83,7 @@ class Office(val ctx: XComponentContext) extends XUI {
     throw new RuntimeException("call uninitialized instance of " + componentName)
 
   def show() {
-    logger.debug("show UI")
+    log.debug("show UI")
     if (isInitialized())
       Office.show()
     else
@@ -131,7 +132,7 @@ class Office(val ctx: XComponentContext) extends XUI {
   // -----------------------------------
   def initialize(args: Array[AnyRef]) {
     synchronized {
-      logger.info("initialize " + componentName)
+      log.info("initialize " + componentName)
       if (isInitialized())
         throw new RuntimeException("Initialization of " + componentName + " already done")
       Office.initialize(ctx)
@@ -143,9 +144,9 @@ class Office(val ctx: XComponentContext) extends XUI {
   // ------------------------------
   override def dispose() {
     synchronized {
-      logger.info("dispose " + componentName)
+      log.info("dispose " + componentName)
       if (!isInitialized()) {
-        logger.warn("dispose of " + componentName + " already done")
+        log.warn("dispose of " + componentName + " already done")
         return
       }
       Office.dispose()
@@ -154,12 +155,12 @@ class Office(val ctx: XComponentContext) extends XUI {
   }
 }
 
-object Office extends XBaseInfo {
+object Office extends XBaseObject {
 
   class Panel(val tab: Tab, var active: Boolean = false) {}
 
-  private val logger = LoggerFactory.getLogger(this.getClass.getName)
-  var componentSingleton: Option[XBase] = None
+  private val log = LoggerFactory.getLogger(this.getClass.getName)
+  var componentSingleton: Option[XBaseClass] = None
   val componentTitle = "Documentum Elasticus UI"
   val componentDescription = "standard UI component"
   val componentURL = "http://www."
@@ -167,7 +168,7 @@ object Office extends XBaseInfo {
   val componentServices: Array[String] = Array(componentName)
   val componentDisabled = false
   private val initialized: AtomicBoolean = new AtomicBoolean(false)
-  logger.info(componentName + " active")
+  log.info(componentName + " active")
 
   /**
    * @param args the command line arguments
@@ -202,7 +203,7 @@ object Office extends XBaseInfo {
 
   private def initialize(arg: XComponentContext) {
     synchronized {
-      logger.debug("initialize")
+      log.debug("initialize")
       ctx = arg
       mcf = ctx.getServiceManager
       toolkit = O.SI[XToolkit](mcf, "com.sun.star.awt.Toolkit", ctx)
@@ -242,7 +243,7 @@ object Office extends XBaseInfo {
             parent.getWidth() - insets(1).getPixels(0, parent, null) - insets(3).getPixels(0, parent, null)
           else
             parent.getWidth() - PlatformDefaults.getPanelInsets(1).getPixels(0, parent, null) - PlatformDefaults.getPanelInsets(3).getPixels(0, parent, null)
-          logger.trace("adjust '" + comp.asInstanceOf[OControl].controlID + "' width/size from " + comp.getWidth + " to " + w + ", parent width " + parent.getWidth())
+          log.trace("adjust '" + comp.asInstanceOf[OControl].controlID + "' width/size from " + comp.getWidth + " to " + w + ", parent width " + parent.getWidth())
           Array[BoundSize](ConstraintParser.parseBoundSize(w + "!", false, true),
             ConstraintParser.parseBoundSize(w + "!", false, false))
         }
@@ -260,7 +261,7 @@ object Office extends XBaseInfo {
   }
 
   private def dispose() {
-    logger.debug("dispose")
+    log.debug("dispose")
     Office.initialized.set(false)
   }
 
@@ -285,7 +286,7 @@ object Office extends XBaseInfo {
     panelAdd(tabAdd(classOf[Overview], "Overview"))
     //panelAdd(tabAdd(classOf[Storages], "Storages"))
     var position = 2
-    logger.debug("initialize tabs")
+    log.debug("initialize tabs")
     extension.components().foreach(name => {
       if (name != "org.digimead.documentumelasticus.Core" &&
         extension.component(name).componentSingleton != null &&
@@ -293,14 +294,14 @@ object Office extends XBaseInfo {
         extension.component(name).componentSingleton.get.isInstanceOf[TabEntity]
       ) {
         val component = extension.component(name).componentSingleton.get.asInstanceOf[TabEntity]
-        logger.debug("add tab for component " + name)
+        log.debug("add tab for component " + name)
         if (tabComponents.find(_ == component) == None) {
           tabComponents.append(component)
           component.tabAdd(contentFrame, position)
           position += 1
         }
       } else {
-        logger.debug("skip component " + name)
+        log.debug("skip component " + name)
       }
     })
     panelsContainer.getComponents().foreach(_.asInstanceOf[OControl].stash.asInstanceOf[Panel].tab.refresh())
@@ -318,7 +319,7 @@ object Office extends XBaseInfo {
     val panelPrefix = "panel_"
     val controls = Office.panelsContainer.getControls()
     val panelPos = controls.length
-    logger.debug("add new " + panelPrefix + panelPos)
+    log.debug("add new " + panelPrefix + panelPos)
     // create panel base
     val panelContainer = new OControlContainer(mcf, panelPrefix + panelPos, Office.panelsContainer, ctx, new MigLayout("insets 1, gap 0, align center", "", "[grow][]"))
     val panelClass = new Panel(tab)
@@ -439,11 +440,11 @@ object Office extends XBaseInfo {
       return
     if (Office.activePanel != null) {
       val oldTab = Office.activePanel.stash.asInstanceOf[Panel].tab
-      logger.debug("hide tab '" + oldTab.name + "'")
+      log.debug("hide tab '" + oldTab.name + "'")
       oldTab.frame.getContainerWindow.setVisible(false)
     }
     val newTab = control.stash.asInstanceOf[Panel].tab
-    logger.debug("activate tab '" + newTab.name + "'")
+    log.debug("activate tab '" + newTab.name + "'")
     val contentSize = O.I[XWindow2](Office.contentFrame.getContainerWindow).getOutputSize
     val tabWindow = newTab.frame.getContainerWindow
     val tabPos = tabWindow.getPosSize
@@ -458,7 +459,7 @@ object Office extends XBaseInfo {
   // -------------
   class TopFrameCloseListener() extends XCloseListener {
     def queryClosing(arg0: EventObject, arg1: Boolean) {
-      logger.warn("queryClosing")
+      log.warn("queryClosing")
       if (fTopWindowActive && O.I[XWindow2](baseFrame.getContainerWindow).isVisible) {
         hide()
         throw new CloseVetoException // user try to close with X, TODO fix it, need deeper check!!!
@@ -466,47 +467,47 @@ object Office extends XBaseInfo {
     }
 
     def notifyClosing(arg0: EventObject) {
-      logger.warn("notifyClosing")
+      log.warn("notifyClosing")
     }
 
     // ----------------------------------
     // - implement trait XEventListener -
     // ----------------------------------
     def disposing(e: EventObject) {
-      logger.trace("disposing")
+      log.trace("disposing")
     }
   }
 
   //UNO.XCloseBroadcaster(calcDoc).removeCloseListener(myCalcListener);
 
   class TopWindowListener() extends XWindowListener with XTopWindowListener {
-    val logger: Logger = LoggerFactory.getLogger(this.getClass)
+    val log = LoggerFactory.getLogger(this.getClass)
     var initialResize = true
     // --------------------------------------
     // - implement trait XTopWindowListener -
     // --------------------------------------
     def windowOpened(e: EventObject) {
-      logger.trace("window opened")
+      log.trace("window opened")
     }
 
     def windowClosing(e: EventObject) {
-      logger.trace("window closing")
+      log.trace("window closing")
     }
 
     def windowClosed(e: EventObject) {
-      logger.trace("window closed")
+      log.trace("window closed")
     }
 
     def windowMinimized(e: EventObject) {
-      logger.trace("window minimized")
+      log.trace("window minimized")
     }
 
     def windowNormalized(e: EventObject) {
-      logger.trace("window normalized")
+      log.trace("window normalized")
     }
 
     def windowActivated(e: EventObject) {
-      logger.trace("window activated")
+      log.trace("window activated")
       fTopWindowActive = true
       if (initialResize) {
         initialResize = false
@@ -522,7 +523,7 @@ object Office extends XBaseInfo {
     }
 
     def windowDeactivated(e: EventObject) {
-      logger.trace("window deactivated")
+      log.trace("window deactivated")
       fTopWindowActive = false
     }
 
@@ -530,17 +531,17 @@ object Office extends XBaseInfo {
     // - implement trait XWindowListener -
     // --------------------------------------
     def windowHidden(e: EventObject) {
-      logger.trace("window hidden")
+      log.trace("window hidden")
     }
 
     def windowShown(e: EventObject) {
-      logger.trace("window shown")
+      log.trace("window shown")
     }
 
     def windowMoved(e: WindowEvent) {}
 
     def windowResized(e: WindowEvent) {
-      logger.trace("window resized")
+      log.trace("window resized")
       val iWidth = if (e.Width < Office.iMinimumWidth) Office.iMinimumWidth else e.Width
       val iHeight = if (e.Height < Office.iMinimumHeight) Office.iMinimumHeight else e.Height
       if (iWidth != e.Width || iHeight != e.Height) {
@@ -615,29 +616,29 @@ object Office extends XBaseInfo {
     // - implement trait XEventListener -
     // ----------------------------------
     def disposing(e: EventObject) {
-      logger.trace("disposing")
+      log.trace("disposing")
     }
   }
 
   class ContentWindowListener() extends XWindowListener {
-    val logger: Logger = LoggerFactory.getLogger(this.getClass)
+    val log = LoggerFactory.getLogger(this.getClass)
     // --------------------------------------
     // - implement trait XWindowListener -
     // --------------------------------------
     def windowHidden(e: EventObject) {
-      logger.trace("window hidden")
+      log.trace("window hidden")
     }
 
     def windowShown(e: EventObject) {
-      logger.trace("window shown")
+      log.trace("window shown")
     }
 
     def windowMoved(e: WindowEvent) {
-      logger.trace("window moved")
+      log.trace("window moved")
     }
 
     def windowResized(e: WindowEvent) {
-      logger.trace("window resized")
+      log.trace("window resized")
       if (Office.activePanel != null) {
         val contentSize = O.I[XWindow2](Office.contentFrame.getContainerWindow).getOutputSize
         val tab = Office.activePanel.stash.asInstanceOf[Panel].tab
@@ -650,29 +651,29 @@ object Office extends XBaseInfo {
     // - implement trait XEventListener -
     // ----------------------------------
     def disposing(e: EventObject) {
-      logger.trace("disposing")
+      log.trace("disposing")
     }
   }
 
   class ControlWindowListener() extends XWindowListener {
-    val logger: Logger = LoggerFactory.getLogger(this.getClass)
+    val log = LoggerFactory.getLogger(this.getClass)
     // -----------------------------------
     // - implement trait XWindowListener -
     // -----------------------------------
     def windowHidden(e: EventObject) {
-      logger.trace("window hidden")
+      log.trace("window hidden")
     }
 
     def windowShown(e: EventObject) {
-      logger.trace("window shown")
+      log.trace("window shown")
     }
 
     def windowMoved(e: WindowEvent) {
-      logger.trace("window moved")
+      log.trace("window moved")
     }
 
     def windowResized(e: WindowEvent) {
-      logger.trace("window resized")
+      log.trace("window resized")
       Office.panelsWrapper.layout()
     }
 
@@ -680,7 +681,7 @@ object Office extends XBaseInfo {
     // - implement trait XEventListener -
     // ----------------------------------
     def disposing(e: EventObject) {
-      logger.trace("disposing")
+      log.trace("disposing")
     }
   }
 
